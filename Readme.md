@@ -1,11 +1,12 @@
 # Student Management REST API (Spring Boot)
 
-A full-featured RESTful web service built incrementally across **Lab Experiments 3 to 9** using **Spring Boot**, **Spring Data JPA**, **MySQL**, **Bean Validation**, **JUnit / MockMvc**, and **Spring Security**.
+A full-featured RESTful web service built incrementally across **Lab Experiments 1 to 9** using **Java**, **Spring Boot**, **Spring Data JPA**, **MySQL**, **Bean Validation**, **JUnit / MockMvc**, and **Spring Security**.
 
 ---
 
-## Tech Stack & Dependencies
-- **Java & Spring Boot** (`spring-boot-starter-webmvc`, `spring-boot-devtools`)
+## Tech Stack & Tools
+- **Environment & IDE:** JDK, IntelliJ IDEA, Apache Maven, Windows Command Prompt (`cURL`)
+- **Framework:** Spring Boot (`spring-boot-starter-webmvc`, `spring-boot-devtools`)
 - **Database & ORM:** MySQL 8.x, Spring Data JPA (`spring-boot-starter-data-jpa`), MySQL Connector/J
 - **Validation:** Jakarta Bean Validation (`spring-boot-starter-validation`)
 - **Security:** Spring Security (`spring-boot-starter-security`) with HTTP Basic Authentication
@@ -45,39 +46,48 @@ student-management/
 
 ## Lab-by-Lab Implementation Log
 
+### Lab Experiment 1: Development Environment & Software Setup
+- Installed and configured the required backend development toolchain, including the Java Development Kit (JDK), IntelliJ IDEA, Maven, and MySQL server/CLI tools.
+- Verified environment variables and local tooling readiness for Spring Boot development.
+
+### Lab Experiment 2: Spring Boot Project Initialization & Hello World API
+- Bootstrapped the `student-management` Maven project (`com.example.ucs067.studentmanagement`) with `spring-boot-starter-webmvc` and `spring-boot-devtools`.
+- Configured the embedded Tomcat server port (`server.port=8081`) in `application.properties`.
+- Created `HelloController` with `@RestController` and implemented the initial `GET /hello` endpoint returning `"Hello, Spring Boot!"`.
+
 ### Lab Experiment 3: In-Memory CRUD REST API
 - Updated `Student.java` with a default constructor, parameterized constructor, and getters/setters to support Jackson JSON serialization/deserialization.
-- Built initial CRUD endpoints (`GET`, `POST`, `PUT`, `DELETE`) in `HelloController` backed by an in-memory `ArrayList<Student>` with `ResponseEntity` HTTP status handling (`200 OK`, `404 Not Found`).
+- Built initial CRUD endpoints (`GET`, `POST`, `PUT`, `DELETE`) in `HelloController` backed by an in-memory `ArrayList<Student>` with `ResponseEntity` HTTP status handling (`200 OK`, `404 Not Found`)[cite: 1].
 
 ### Lab Experiment 4: MySQL Persistence & Spring Data JPA
-- Configured MySQL database (`studentdb`) on port `3306` and added `spring-boot-starter-data-jpa` and `mysql-connector-j` to `pom.xml`.
+- Created the `studentdb` database in MySQL and added `spring-boot-starter-data-jpa` and `mysql-connector-j` to `pom.xml`.
 - Mapped `Student` to the `students` table using `@Entity`, `@Table`, and `@Id`.
-- Created `StudentRepository extends JpaRepository<Student, Integer>` and refactored `HelloController` to persist all CRUD operations directly in MySQL.
+- Created `StudentRepository extends JpaRepository<Student, Integer>` and refactored `HelloController` to persist all CRUD operations directly in MySQL[cite: 2].
 
 ### Lab Experiment 5: Derived Query Methods, Pagination & Sorting
 - Extended `StudentRepository` with Spring Data derived queries (`findByName`, `findByNameContaining`, `findByEmail`) without writing manual SQL.
 - Added search endpoints (`/students/search/name/{name}`, `/students/search/name/contains/{keyword}`, `/students/search/email/{email}`).
-- Implemented paginated retrieval using `Pageable` (`/students/page?page=0&size=2`) and alphabetical sorting using `Sort.by("name")` (`/students/sort/name`).
+- Implemented paginated retrieval using `Pageable` (`/students/page?page=0&size=2`) and alphabetical sorting using `Sort.by("name")` (`/students/sort/name`)[cite: 3].
 
 ### Lab Experiment 6: One-to-Many Relationship (`Student` ↔ `Course`)
 - Created the `Course` entity (`id`, `courseName`, `credits`) and `CourseRepository`.
 - Configured bidirectional `@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)` on `Student` and `@ManyToOne` on `Course` (maintaining the `student_id` foreign key).
 - Resolved infinite JSON serialization loops using `@JsonManagedReference` and `@JsonBackReference`.
-- Added endpoints to assign courses to students (`POST /students/{studentId}/courses`) and list all courses (`GET /courses`).
+- Added endpoints to assign courses to students (`POST /students/{studentId}/courses`) and list all courses (`GET /courses`)[cite: 4].
 
 ### Lab Experiment 7: Input Validation & Centralized Exception Handling
 - Added `spring-boot-starter-validation` and enforced constraints on `Student` fields (`@NotBlank`, `@Email`).
 - Enabled request body validation via `@Valid` on `POST /students` and `PUT /students/{id}`.
-- Created `GlobalExceptionHandler` (`@RestControllerAdvice` + `@ExceptionHandler(MethodArgumentNotValidException.class)`) to return clean `400 Bad Request` field-level JSON error maps instead of stack traces.
+- Created `GlobalExceptionHandler` (`@RestControllerAdvice` + `@ExceptionHandler(MethodArgumentNotValidException.class)`) to return clean `400 Bad Request` field-level JSON error maps instead of stack traces[cite: 5].
 
 ### Lab Experiment 8: Auto-Increment Schema Migration, cURL & MockMvc Automated Testing
 - Migrated `students.id` to `AUTO_INCREMENT` (`@GeneratedValue(strategy = GenerationType.IDENTITY)`) while preserving the `course.student_id` foreign key constraint.
 - Verified full CRUD lifecycle and status codes (`200`, `400`, `404`) via `cURL`.
-- Added automated integration tests in `StudentManagementApplicationTests` using `@SpringBootTest` and `@AutoConfigureMockMvc` to verify endpoint responses and `400 Bad Request` validation payloads.
+- Added automated integration tests in `StudentManagementApplicationTests` using `@SpringBootTest` and `@AutoConfigureMockMvc` to verify endpoint responses and `400 Bad Request` validation payloads[cite: 6].
 
 ### Lab Experiment 9: API Authentication with Spring Security
 - Added `spring-boot-starter-security` and configured local credentials (`admin` / `admin123`) in `application.properties`.
-- Created `SecurityConfig` defining a `SecurityFilterChain` bean with HTTP Basic authentication (`httpBasic(withDefaults())`), disabling CSRF for stateless API testing, permitting unauthenticated `GET /hello`, and securing all `/students` and `/courses` endpoints (`401 Unauthorized` without valid credentials).
+- Created `SecurityConfig` defining a `SecurityFilterChain` bean with HTTP Basic authentication (`httpBasic(withDefaults())`), disabling CSRF for stateless API testing, permitting unauthenticated `GET /hello`, and securing all `/students` and `/courses` endpoints (`401 Unauthorized` without valid credentials)[cite: 7].
 
 ---
 
