@@ -113,38 +113,31 @@ student-management/
 
 ## Setup & Running Locally
 
-1. **Create the MySQL Database:**
-   ```sql
-   CREATE DATABASE studentdb;
-   ```
-2. **Configure `src/main/resources/application.properties`:**
-   ```properties
-   spring.application.name=student-management
-   server.port=8081
+1. **Clone the Repository in IntelliJ IDEA:**
+   - Open IntelliJ IDEA → **Get from VCS** (or **Git → Clone...**).
+   - Paste `https://github.com/RitikRajSONI/Student_Management.git` and click **Clone**.
 
-   spring.datasource.url=jdbc:mysql://localhost:3306/studentdb
-   spring.datasource.username=root
-   spring.datasource.password=YOUR_MYSQL_PASSWORD
-   spring.jpa.hibernate.ddl-auto=update
-   spring.jpa.show-sql=true
+2. **Create the MySQL Database:**
+   - Open MySQL Command Line / CMD (`mysql -u root -p`) and run:
+     ```sql
+     CREATE DATABASE studentdb;
+     ```
+   *(Tables `students` and `course` are created automatically when the app starts.)*
 
-   spring.security.user.name=admin
-   spring.security.user.password=admin123
-   ```
-3. **Run the Application:**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-4. **Test with `cURL`:**
-   ```bash
-   # Public endpoint
-   curl -i http://localhost:8081/hello
+3. **Add Your MySQL Password:**
+   - Open `src/main/resources/application.properties` and update `YOUR_MYSQL_PASSWORD`:
+     ```properties
+     spring.datasource.password=YOUR_MYSQL_PASSWORD
+     ```
 
-   # Authenticated GET
-   curl -i -u admin:admin123 http://localhost:8081/students
+4. **Run the Application:**
+   - Open `StudentManagementApplication.java` and click the green **Run ▶** button.
+   - The server starts on `http://localhost:8081`.
 
-   # Authenticated POST
-   curl -i -u admin:admin123 -X POST http://localhost:8081/students \
-     -H "Content-Type: application/json" \
-     -d "{\"name\":\"Karan Verma\",\"email\":\"karan@example.com\"}"
-   ```
+5. **Test the API:**
+   - **Browser:** Open `http://localhost:8081/students` and sign in with `admin` / `admin123` (or visit `http://localhost:8081/hello` without login).
+   - **Windows CMD (`cURL`):**
+     ```cmd
+     curl -i -u admin:admin123 http://localhost:8081/students
+     curl -i -u admin:admin123 -X POST http://localhost:8081/students -H "Content-Type: application/json" -d "{\"name\":\"Karan Verma\",\"email\":\"karan@example.com\"}"
+     ```
