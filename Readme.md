@@ -144,7 +144,5 @@ student-management/
    curl -i -u admin:admin123 http://localhost:8081/students
 
    # Authenticated POST
-   curl -i -u admin:admin123 -X POST http://localhost:8081/students \
-     -H "Content-Type: application/json" \
-     -d "{\"name\":\"Karan Verma\",\"email\":\"karan@example.com\"}"
+   curl -i -u admin:admin123 -X POST http://localhost:8081/students -H "Content-Type: application/json" -d "{\"name\":\"Karan Verma\",\"email\":\"karan@example.com\"}"
    ```
